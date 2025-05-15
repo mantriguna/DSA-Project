@@ -1,13 +1,71 @@
 body {
-    background-color: orange;
-    color: black;
-    transition: background-color 0.3s, color 0.3s;
-}
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      background-color: #f9f9f9;
+    }
 
-h1 {
-    background-color: #ffffff;
-    color: #Fe5005;
-    padding: 10px;
-    text-align: center;
-    position: sticky;
-}
+    h1 {
+      background-color: #ffffff;
+      color: #fe5005;
+      padding: 10px;
+      text-align: center;
+      width: 100%;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      margin-bottom: 20px;
+    }
+
+    .input-container {
+      margin-bottom: 20px;
+    }
+
+    input[type="number"] {
+      padding: 8px;
+      font-size: 16px;
+      width: 60px;
+    }
+
+    button {
+      padding: 8px 16px;
+      font-size: 16px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+
+    #chessboard {
+      display: grid;
+      border: 4px solid #333;
+      width: 480px;
+      height: 480px;
+      margin: 0 auto 30px auto;
+      box-sizing: border-box;
+      gap: 0;
+      padding: 1mm;
+    }
+
+    .square {
+      width: 100%;
+      height: 100%;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+	/*after fixed red:#f33e42*/
+    .white {
+    /*#f7f783*/
+      background-color: #eeeed2;
+    }
+
+    .black {
+    /*#bbcb44*/
+      background-color: #769656;
+    }
