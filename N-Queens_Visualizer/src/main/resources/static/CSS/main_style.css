@@ -1,1 +1,13 @@
-@charset "UTF-8";
+body {
+    background-color: orange;
+    color: black;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+h1 {
+    background-color: #ffffff;
+    color: #Fe5005;
+    padding: 10px;
+    text-align: center;
+    position: sticky;
+}
