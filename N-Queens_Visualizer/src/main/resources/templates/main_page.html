@@ -4,46 +4,150 @@
   <meta charset="UTF-8">
   <title>DSA N-Queens Visualizer</title>
   <link rel="icon" type="image/png" href="/Images/My_Logo.png">
-  <link rel="stylesheet" href="/CSS/main_style.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-</head>
+   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/CSS/main_style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  </head>
 <body>
-  <h1>N×N Chessboard Generator</h1>
+  <!-- Background video -->
+  <video id="bg-video" autoplay muted loop>
+    <source src="/Videos/space.webm" type="video/webm" />
+  </video>
 
-  <div class="input-container">
-    <label for="sizeInput">Enter board size (N):</label>
-    <input type="number" id="sizeInput" min="1" max="20" value="8" />
-    <button onclick="generateBoard()">Generate</button>
+  <header>🧩N×N Queens Visualizer</header>
+  <div class="controls">
+  <img src="/Images/My_Logo.png" alt="Logo" style="height: 40px; vertical-align: middle; border-radius: 4px;">
+    <label for="sizeInput">Board Size:</label>
+    <input type="number" id="sizeInput" min="4" max="20" value="8" />
+    <button id="runBtn" style="border-radius: var(--board-radius);" onclick="run()">Start Visualization</button>
+    
   </div>
 
+  <div class="container">
   <div id="chessboard"></div>
 
+  <div id="Iterations">
+	  <div style="display: flex; align-items: center; gap: 1rem;">
+	      <img src="/Images/My_Logo.png" alt="Initial Image" style="height: 100px; border-radius: var(--board-radius); padding: 10px">
+	      <h3 style="margin: 0; font-weight: bold; color: white;">Mantri Guna</h3>
+	  </div>
+	    <a href="https://www.linkedin.com/in/mantri-guna/" target="_blank" 
+   style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; 
+          background-color: #0a66c2; color: white; padding: 0.4rem 0.8rem; 
+          border-radius: 5px; text-decoration: none; font-weight: bold;">
+  <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" 
+       alt="LinkedIn" style="height: 20px; width: 20px; filter: invert(100%);">
+  LinkedIn</a>
+  <div id="logEntries"></div>
+ </div>
+</div>
   <script>
-    function generateBoard() {
-      const size = parseInt(document.getElementById("sizeInput").value);
-      const board = document.getElementById("chessboard");
-      board.innerHTML = ""; // Clear previous board
-
-      board.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
-      board.style.gridTemplateRows = `repeat(${size}, 1fr)`;
-
-      const totalSquares = size * size;
-      for (let i = 0; i < totalSquares; i++) {
-        const square = document.createElement("div");
-        square.classList.add("square");
-        const row = Math.floor(i / size);
-        const col = i % size;
-        if ((row + col) % 2 === 0) {
-          square.classList.add("white");
-        } else {
-          square.classList.add("black");
+    // Compute animations via backtracking
+    function getNQueensAnimations(n) {
+      const animations = [];
+      const board = Array.from({ length: n }, () => Array(n).fill(false));
+      function isSafe(r, c) {
+        for (let i = 0; i < r; i++) if (board[i][c]) return false;
+        for (let i = r-1, j = c-1; i >= 0 && j >= 0; i--, j--) if (board[i][j]) return false;
+        for (let i = r-1, j = c+1; i >= 0 && j < n; i--, j++) if (board[i][j]) return false;
+        return true;
+      }
+      function solve(row) {
+        if (row === n) return true;
+        for (let col = 0; col < n; col++) {
+          const safe = isSafe(row, col);
+          animations.push([row, col, safe]);
+          if (safe) {
+            board[row][col] = true;
+            if (solve(row + 1)) return true;
+            board[row][col] = false;
+            animations.push([row, col, false]);
+          }
         }
-        board.appendChild(square);
+        return false;
+      }
+      solve(0);
+      return animations;
+    }
+
+    // Build grid to fit fixed container
+    function generateBoard() {
+      const size = parseInt(document.getElementById('sizeInput').value, 10);
+      const board = document.getElementById('chessboard');
+      const max = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--board-max-size'));
+      const cell = Math.floor(max / size);
+      board.innerHTML = '';
+      board.style.gridTemplate = `repeat(${size}, ${cell}px) / repeat(${size}, ${cell}px)`;
+      for (let i = 0; i < size * size; i++) {
+        const r = Math.floor(i / size), c = i % size;
+        const sq = document.createElement('div');
+        sq.className = `square ${(r + c) % 2 === 0 ? 'white' : 'black'} q-array-tile`;
+        board.appendChild(sq);
       }
     }
 
-    // Generate default 8x8 on page load
+    // Visualize with total time capped to 20s at n=20
+    function visualize() {
+      const size = parseInt(document.getElementById('sizeInput').value, 10);
+      const tiles = document.getElementsByClassName('q-array-tile');
+      const log = document.getElementById('Iterations');
+      log.innerHTML = '';
+
+      const steps = getNQueensAnimations(size);
+      // compute speed so total = min(20s, steps*minSpeed)
+      const maxTotal = 20000; // ms
+      const speed = Math.ceil(maxTotal / steps.length);
+
+      steps.forEach(([r, c, safe], i) => {
+        setTimeout(() => {
+          const idx = r * size + c;
+          // test queen
+          tiles[idx].innerHTML = '<i class="fas fa-crown queen"></i>';
+          tiles[idx].querySelector('.queen').style.color = getComputedStyle(document.documentElement).getPropertyValue('--test-color');
+          setTimeout(() => {
+            const entry = document.createElement('div');
+            entry.classList.add('alert', safe ? 'alert-success' : 'alert-danger');
+            if (safe) {
+              tiles[idx].classList.add('safe-queen');
+              tiles[idx].querySelector('.queen').style.color = getComputedStyle(document.documentElement).getPropertyValue('--accent-color');
+              entry.textContent = `✅ Queen at (${r},${c})`;
+            } else {
+              tiles[idx].classList.remove('safe-queen');
+              tiles[idx].innerHTML = '';
+              entry.textContent = `❌ Removed from (${r},${c})`;
+            }
+            log.prepend(entry);
+          }, speed / 2);
+        }, i * speed);
+      });
+
+      setTimeout(() => {
+        Array.from(document.getElementsByClassName('safe-queen')).forEach(cell => {
+          cell.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--safe-color');
+        });
+        const done = document.createElement('div');
+        done.classList.add('alert', 'alert-primary');
+        done.textContent = '🎉 Final placement complete!';
+        log.prepend(done);
+        const runBtn = document.getElementById('runBtn');
+        runBtn.disabled = false;
+        runBtn.textContent = 'Reset';
+        runBtn.onclick = () => window.location.reload();
+      }, steps.length * speed);
+    }
+    const sizeInput = document.getElementById('sizeInput');
+    sizeInput.addEventListener('input', () => {
+      generateBoard();
+      document.getElementById('logEntries').innerHTML = '';
+    });
+    function run() {
+    	  const runBtn = document.getElementById('runBtn');
+    	  runBtn.disabled = true;
+    	  runBtn.textContent = 'Running…';
+    	  generateBoard();
+    	  visualize();
+    	}
     window.onload = generateBoard;
   </script>
 </body>
