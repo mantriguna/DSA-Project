@@ -1,63 +1,173 @@
- #bg-video {
+:root {
+      --primary-color: #ffffff;
+      --accent-color: #fe5005;
+      --board-max-width: 800px;
+      --blur-bg: rgba(255,255,255,0.2);
+      --blur-filter: blur(10px);
+      --radius: 12px;
+      --input-shadow: rgba(0,0,0,0.2);
+    }
+    * { box-sizing: border-box; margin:0; padding:0; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: var(--primary-color);
+      background: #000;
+      overflow-x: hidden;
+    }
+
+    #bg-video {
       position: fixed;
-      right: 0;
-      bottom: 0;
-      min-width: 100%;
-      min-height: 100%;
-      z-index: -1;
+      top:0; left:0;
+      width:100vw; height:100vh;
+      object-fit: cover;
+      z-index:-1;
       filter: brightness(50%);
     }
-    header, #controls, #blurb {
-      backdrop-filter: blur(10px);
-      background: rgba(255,255,255,0.2);
-      border-radius: 12px;
+    header {
+      color: white;
+      text-align: center;
       padding: 1rem;
-      margin: 1rem auto;
-      max-width: 800px;
-      color: #fff;
-    }
-    #title {
       font-size: 2rem;
       font-weight: 700;
-      text-align: center;
-      margin-bottom: 0.5rem;
+      text-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+    .controls {
+      display:flex;
+      flex-wrap:wrap;
+      gap:1rem;
+      justify-content: space-between;
+      backdrop-filter: var(--blur-filter);
+      background: var(--blur-bg);
+      padding:1rem;
+      border-radius: var(--radius);
+      margin:0rem auto;
+      max-width: var(--board-max-width);
+      align-items: center;
+      border: 1px solid rgba(255,255,255,0.4);
+    }
+    .controls img.logo {
+      height:40px;
+      border-radius:4px;
+    }
+    .controls .button-group {
+      display:flex;
+      gap:0.5rem;
+      flex-wrap:wrap;
+    }
+    .controls button,
+    .controls a.link-btn {
+      display:inline-flex;
+      align-items:center;
+      gap:0.5rem;
+      padding:0.5rem 5.5rem;
+      background: var(--accent-color);
+      color:#fff;
+      border:none;
+      border-radius: var(--radius);
+      cursor:pointer;
+      font-weight:500;
+      text-decoration:none;
+      transition:transform 0.2s;
+    }
+    .controls button:hover,
+    .controls a.link-btn:hover {
+      transform: translateY(-2px);
+    }
+    .controls label,
+    .controls input[type="text"] {
+      font-size:1rem;
     }
     #array-input {
-      width: 100%;
-      padding: 0.5rem;
-      border-radius: 8px;
-      border: none;
-      font-size: 1rem;
-      margin-top: 0.5rem;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      flex:1;
+      padding:0.5rem;
+      border:none;
+      border-radius:8px;
+      box-shadow:0 4px 15px var(--input-shadow);
+      font-size:1rem;
     }
-    #controls {
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
-      flex-wrap: wrap;
-      margin-top: 1rem;
+    #blurb {
+  text-align: center;
+  margin: auto;
+  margin-left: 1rem;
+  height:170px;
+  width: 470px; /* Fixed width */
+  max-width: var(--board-max-width); /* Optional, allows responsiveness */
+  box-sizing: border-box;
+  overflow: auto; /* Enables scroll if content overflows */
+  word-wrap: break-word; /* Ensures long words wrap */
+  backdrop-filter: var(--blur-filter);
+  background: var(--blur-bg);
+  border-radius: var(--radius);
+  padding: 2.1rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+#array-visual {
+	display: block;
+  margin: 1em;
+}
+    
+    #visual-title { font-size:1rem; margin-bottom:0.5rem; }
+    #binary-tree,
+    #array-visual {
+      display:flex;
+      justify-content:center;
+      margin:1rem auto;
+      max-width:90%;
     }
-    #controls button {
-      flex: 1;
-      padding: 0.75rem;
-      font-size: 1rem;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      transition: transform 0.2s, background 0.2s;
+    .linkedin-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #0a66c2;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  align-content: center;
+}
+
+.linkedin-button:hover {
+  background-color: #004182;
+}
+ 
+#Iterations {
+      width: 300px;
+      max-height: var(--board-max-size);
+      overflow-y: auto;
+      backdrop-filter: var(--blur-filter);
+      background: var(--blur-bg);
+      padding: 1rem;
+      margin-left:14.5rem ;
+      border-radius: var(--board-radius);
+      border: 1px solid rgba(255,255,255,0.4);
+      background: var(--blur-bg);
+      border-radius: var(--radius);
     }
-    #controls button:hover {
-      transform: translateY(-2px);
-      background: rgba(255,255,255,0.3);
-    }
-    #visual-title {
-      font-size: 1.5rem;
-      margin-bottom: 0.5rem;
-    }
-    #binary-tree, #array-visual {
-      display: flex;
-      justify-content: center;
-      margin: 1rem auto;
-      max-width: 90%;
-    }
+
+    
+rect:hover, circle:hover, text.circle:hover, text.rect:hover {
+  cursor: pointer;
+}
+
+.subtext {
+  font-size: .8em;
+  font-weight: 400;
+}
+
+.svg-container {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+  vertical-align: top;
+  overflow: hidden;
+}
+
+.svg-content-responsive {
+  display: inline-block;
+  position: absolute;
+  top: 10px;
+  left: 0;
+}

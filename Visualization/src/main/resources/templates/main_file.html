@@ -1,95 +1,150 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DSA Tree Visualization</title>
-  <link rel="icon" type="image/png" href="/Images/My_Logo.png">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="/Images/My_Logo.png" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap"
+    rel="stylesheet"
+  />
   <link rel="stylesheet" href="/CSS/css_File.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+  />
   <script src="https://d3js.org/d3.v5.min.js"></script>
+  
+
 </head>
 <body>
   <video id="bg-video" autoplay muted loop>
     <source src="/Videos/space.webm" type="video/webm" />
   </video>
 
-  <header>
-    <div id="title">Tree Visualizer</div>
-    <label for="array-input">Enter array (comma separated):</label>
-    <input type="text" id="array-input" placeholder="e.g. 10,20,30,40" />
-    <div id="controls">
-      <button onclick="treeAndArray()"><i class="fas fa-sitemap"></i> Binary Tree</button>
-      <button onclick="heapify()"><i class="fas fa-archive"></i> Max-Heap</button>
-      <button onclick="createBinarySearchTree()"><i class="fas fa-search"></i> BST</button>
-    </div>
-  </header>
+  <header>🧩Tree Visualizer</header>
 
-  <div id="blurb">
+  <div class="controls">
+    <img src="/Images/My_Logo.png" alt="Logo" class="logo" />
+        <button onclick="window.open('https://github.com/mantriguna/DSA-Project/tree/eed005856908da3a57318b3d6fa3191b7b7e3c42/Visualization', '_blank')"
+          style="display: inline-flex; align-items: center; gap: 0.5rem;
+                 padding: 0.5rem 1rem; margin: 0 0.5rem;
+                 background: #000; color: #fff; border: none; border-radius: 0.5rem;
+                 cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 500;">
+    <i class="fab fa-github" style="font-size: 1.2rem;"></i>
+    Code
+  </button>
+  <button onclick="window.open('https://www.geeksforgeeks.org/user/mantriguna/', '_blank')"
+        style="display: inline-flex; align-items: center; gap: 0.5rem;
+               padding: 0.5rem 1rem; margin: 0 0.5rem;
+               background: #2f8d46; color: #fff; border: none; border-radius: 0.5rem;
+               cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 500;">
+  <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/geeksforgeeks.svg"
+       alt="GFG" style="height: 20px; width: 20px; filter: invert(100%);">
+Profile
+</button>
+
+    <label for="array-input">Enter array:</label>
+    <input type="text" id="array-input" placeholder="e.g. 10, 20, 30,..,..,.. (comma separated)" />
+    <div>
+    <button onclick="treeAndArray()"><i class="fas fa-sitemap"></i> Binary Tree</button>
+    <button onclick="heapify()"><i class="fas fa-archive"></i> Max-Heap</button>
+    <button onclick="createBinarySearchTree()"><i class="fas fa-search"></i> BST</button>
+    </div>
+  </div>
+  <div style="display: flex; justify-content: center; align-items: flex-start; gap: 1rem; flex-wrap: nowrap; margin-top: 1rem;">
+
+  <div id="Iterations" style="min-width: 220px;">
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <img src="/Images/My_Logo.png" alt="Initial Image" style="height: 100px; border-radius: var(--board-radius); padding: 10px">
+      <h2 style="margin: 0; font-weight: bold; color: white;">Mantri Guna</h2>
+    </div>
+    <a href="https://www.linkedin.com/in/mantri-guna/" target="_blank" 
+       style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; 
+              background-color: #0a66c2; color: white; padding: 0.4rem 0.8rem; 
+              border-radius: 5px; text-decoration: none; font-weight: bold;">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" 
+           alt="LinkedIn" style="height: 20px; width: 20px; filter: invert(100%);">
+      LinkedIn
+    </a>
+  </div>
+
+  <div id="blurb" style="min-width: 400px;">
     <div id="visual-title"></div>
     <div id="instructions"></div>
   </div>
 
-  <div id="binary-tree"></div>
-  <div id="array-visual"></div>
-    <script>
-    let input;
-    document.addEventListener('DOMContentLoaded', () => {
-      input = [10, 20, 60, 30, 70, 40, 50];
-      document.getElementById('array-input').value = input.join(', ');
-      document.getElementById('visual-title').innerText = 'Binary Tree And Array';
-      document.getElementById('instructions').innerText = 'Click a node or array cell to highlight it.';
-      createBinaryTreeAndArr(input);
-    });
+</div>
 
-    function reset() {
-      d3.selectAll('svg').remove();
-    }
+<!-- Tree and Array Visual below the fixed row -->
+<div id="binary-tree" style="margin-top: 2rem;"></div>
+<div id="array-visual" style="margin-top: 1rem;"></div>
 
-    function treeAndArray() {
-      reset();
-      let inputText = document.getElementById("array-input")
-      document.querySelector('#visual-title').innerHTML = "Binary Tree And Array";
-      document.querySelector('#instructions').innerHTML = "Click a value in the binary tree or array to highlight its corresponding location in the data structure.";
-      if (inputText.value !== '') {
-          input = inputText.value.trim().split(/\s+|\,+/g).map((num) => parseInt(num));
-          createBinaryTreeAndArr(input)
-      }
-    }
 
-    function heapify() {
-      reset();
-      let inputText = document.getElementById("array-input")
-      if (inputText.value !== '') {
-        input = inputText.value.trim().split(/\s+|\,+/g).map((num) => parseInt(num));
-        makeHeap(input, input.length);
-        createBinaryTreeAndArr(input);
-        document.getElementById('instructions').innerHTML = "<p> Parent's value is always greater than or equal to the values of its children.</p>";
-        document.getElementById('visual-title').innerHTML = "Max-Heap Binary Tree And Array";
-      }
-    }
+<script>
+let input;
+document.addEventListener('DOMContentLoaded', () => {
+  input = [10,20,60,30,70,40,50];
+  document.getElementById('array-input').value = input.join(', ');
+  document.getElementById('visual-title').innerText = 'Binary Tree And Array';
+  document.getElementById('instructions').innerText = 'Click a node or array cell to highlight it.';
+  createBinaryTreeAndArr(input);
+});
 
-    function createBinaryTreeAndArr(arr) {
-      arrayContainer = createContainer("array-visual", arr, arr.length * 60, 100);
-      let tree = new Tree()
-      tree.createBinaryTree(input)
-      createArray(arr, 2, 30, 50, 50);
-    }
+  function parseInput() {
+    const raw = document.getElementById('array-input').value;
+    if (!raw.trim()) return [];
+    return raw
+      .split(/\s*,\s*/)
+      .map(str => Number(str))
+      .filter(num => !isNaN(num));
+  }
 
-    function createBinarySearchTree() {
-      let inputText = document.getElementById("array-input")
-      if (inputText.value !== '') {
-        reset();
-        input = inputText.value.trim().split(/\s+|\,+/g).map((num) => parseInt(num));
-        input.sort((a, b) => a - b);
-        document.querySelector('#visual-title').innerHTML = "Binary Search Tree";
-        document.querySelector('#instructions').innerHTML = "The input data sorted and arranged into a Binary Search Tree.";
-        let tree = new Tree();
-        tree.createBinarySearchTree(input)
-      }
-    }
+  function reset() {
+    d3.selectAll('svg').remove();
+  }
 
+  function treeAndArray() {
+    reset();
+    const arr = parseInput();
+    if (!arr.length) return;
+    input = arr;
+    document.querySelector('#visual-title').innerHTML = "Binary Tree And Array";
+    document.querySelector('#instructions').innerHTML = "Click a value in the binary tree or array to highlight its corresponding location in the data structure.";
+    createBinaryTreeAndArr(input);
+  }
+
+  function heapify() {
+    reset();
+    const arr = parseInput();
+    if (!arr.length) return;
+    input = arr;
+    makeHeap(input);
+    createBinaryTreeAndArr(input);
+    document.getElementById('instructions').innerHTML = "<p> Parent's value is always greater than or equal to the values of its children.</p>";
+    document.getElementById('visual-title').innerHTML = "Max-Heap Binary Tree And Array";
+  }
+
+  function createBinaryTreeAndArr(arr) {
+    arrayContainer = createContainer("array-visual", arr);
+    let tree = new Tree();
+    tree.createBinaryTree(arr);
+  }
+
+  function createBinarySearchTree() {
+    reset();
+    const arr = parseInput();
+    if (!arr.length) return;
+    input = arr.sort((a, b) => a - b);
+    document.querySelector('#visual-title').innerHTML = "Binary Search Tree";
+    document.querySelector('#instructions').innerHTML = "The input data sorted and arranged into a Binary Search Tree.";
+    let tree = new Tree();
+    tree.createBinarySearchTree(input);
+  }
+    
+    
+    
     let swaps = [];
   //Helper functions
   function swap(arr, a, b) {
@@ -156,7 +211,7 @@
       }
     }
   }
-  var regFill = "green";
+  var regFill = "orange";
   var highlightFill = "lightblue";
 
   var regFillText = "black"
@@ -454,6 +509,10 @@
 
     return container;
   }
+  
+  
+  
+  
     </script>
     
   </body>
