@@ -1,0 +1,118 @@
+    #container { text-align: center }
+    table { border-collapse: collapse; font-size: 2em; margin: 0 auto; }
+    colgroup, tbody { border: solid medium; }
+    td { border: solid thin; height: 1.4em; width: 1.4em; text-align: center; padding: 0; }
+    
+    padd{padding-bottom: 100px;}
+    #solve-button,#clear-button{padding-left:50px;padding-right:50px;
+    }
+    
+    
+:root {
+      --primary-color: #ffffff;
+      --accent-color: #fe5005;
+      --board-max-width: 800px;
+      --blur-bg: rgba(255,255,255,0.2);
+      --blur-filter: blur(10px);
+      --radius: 12px;
+      --input-shadow: rgba(0,0,0,0.2);
+    }
+    * { box-sizing: border-box; margin:0; padding:0; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: var(--primary-color);
+      background: #000;
+      overflow-x: hidden;
+    }  
+     #bg-video {
+      position: fixed;
+      top:0; left:0;
+      width:100vw; height:100vh;
+      object-fit: cover;
+      z-index:-1;
+      filter: brightness(50%);
+    }
+    header {
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      font-size: 2rem;
+      font-weight: 700;
+      text-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+    .controls {
+      display:flex;
+      flex-wrap:wrap;
+      gap:1rem;
+      justify-content: space-between;
+      backdrop-filter: var(--blur-filter);
+      background: var(--blur-bg);
+      padding:1rem;
+      border-radius: var(--radius);
+      margin:0rem auto;
+      max-width: var(--board-max-width);
+      align-items: center;
+      border: 1px solid rgba(255,255,255,0.4);
+    }
+    .controls img.logo {
+      height:40px;
+      border-radius:4px;
+    }
+    .controls .button-group {
+      display:flex;
+      gap:0.5rem;
+      flex-wrap:wrap;
+    }
+    .controls button,
+    .controls a.link-btn {
+      display:inline-flex;
+      align-items:center;
+      gap:0.5rem;
+      padding:0.5rem 5.5rem;
+      background: var(--accent-color);
+      color:#fff;
+      border:none;
+      border-radius: var(--radius);
+      cursor:pointer;
+      font-weight:500;
+      text-decoration:none;
+      transition:transform 0.2s;
+    }
+    .controls button:hover,
+    .controls a.link-btn:hover {
+      transform: translateY(-2px);
+    }
+    
+    
+.linkedin-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #0a66c2;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  align-content: center;
+}
+
+.linkedin-button:hover {
+  background-color: #004182;
+}
+ 
+#Iterations {
+		margin-top:10px;
+      width: 300px;
+      max-height: var(--board-max-size);
+      overflow-y: auto;
+      backdrop-filter: var(--blur-filter);
+      background: var(--blur-bg);
+      padding: 1rem;
+      margin-left:14.5rem ;
+      border-radius: var(--board-radius);
+      border: 1px solid rgba(255,255,255,0.4);
+      background: var(--blur-bg);
+      border-radius: var(--radius);
+    }
