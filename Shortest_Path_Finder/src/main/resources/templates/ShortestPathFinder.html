@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DSA Dijikstra</title>
+  <link rel="icon" type="image/png" href="/Images/My_Logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/CSS/ShortestPathFinder.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+</head>
+<body>
+
+  <video id="bg-video" autoplay muted loop>
+    <source src="/Videos/space.webm" type="video/webm" />
+  </video>
+
+  <header>🧩Dijikstra- Shortest Path Finder</header>
+
+  <div class="controls">
+    <img src="/Images/My_Logo.png" alt="Logo" class="logo" />
+        <button onclick="window.open('https://github.com/mantriguna/DSA-Project/tree/dbb40b2a8f42bfbe47e0962a8e0abf31985479b6/Sudoku-Solver', '_blank')"
+          style="display: inline-flex; align-items: center; gap: 0.5rem;
+                 padding: 0.5rem 1rem; margin: 0 0.5rem;
+                 background: #000; color: #fff; border: none; border-radius: 0.5rem;
+                 cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 500;">
+    <i class="fab fa-github" style="font-size: 1.2rem;"></i>
+    Code
+  </button>
+  <button onclick="window.open('https://www.geeksforgeeks.org/user/mantriguna/', '_blank')"
+        style="display: inline-flex; align-items: center; gap: 0.5rem;
+               padding: 0.5rem 1rem; margin: 0 0.5rem;
+               background: #2f8d46; color: #fff; border: none; border-radius: 0.5rem;
+               cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 500;">
+  <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/geeksforgeeks.svg"
+       alt="GFG" style="height: 20px; width: 20px; filter: invert(100%);">
+Profile
+</button>
+	<button id="visualizeBtn" style="padding:  10px 35px 10px 35px; ">Visualize</button>
+    <button id="resetBtn" style="padding:  10px 35px 10px 35px;">Reset Grid</button>
+</div>
+<div style="display: flex; gap: 2rem; align-items: flex-start; margin-left:60px;">
+  <div id="Iterations">
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <img src="/Images/My_Logo.png" alt="Initial Image" style="height: 100px; border-radius: var(--board-radius); padding: 10px">
+      <h2 style="margin: 0; font-weight: bold; color: white;">Mantri Guna</h2>
+    </div>
+    <a href="https://www.linkedin.com/in/mantri-guna/" target="_blank" 
+       style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; 
+              background-color: #0a66c2; color: white; padding: 0.4rem 0.8rem; 
+              border-radius: 5px; text-decoration: none; font-weight: bold;">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" 
+           alt="LinkedIn" style="height: 20px; width: 20px; filter: invert(100%);">
+      LinkedIn
+    </a>
+  </div> 
+
+  <div class="info-box" style="border-radius: var(--radius);">
+  <span class="alert-icon">ℹ️</span>
+  You can place a blocker on the grid by clicking a cell, which prevents the pathfinding algorithm from passing through it.
+</div>
+
+  
+</div>
+
+	<div style="margin-left: 10px;"><div id="grid" style="margin: 20px 0 20px 0;"></div></div>
+
+</body>
+<!-- node -->
+<script>
+const rows = 20;
+const cols = 50;
+const gridElement = document.getElementById('grid');
+let grid = [];
+let isMousePressed = false;
+let startNode = null;
+let finishNode = null;
+
+function createGrid() {
+  grid = [];
+  gridElement.innerHTML = '';
+  for (let row = 0; row < rows; row++) {
+    const currentRow = [];
+    for (let col = 0; col < cols; col++) {
+      const node = {
+        row,
+        col,
+        isStart: row === 10 && col === 15,
+        isFinish: row === 10 && col === 35,
+        isWall: false,
+        distance: Infinity,
+        isVisited: false,
+        previousNode: null,
+        element: null
+      };
+      const nodeElement = document.createElement('div');
+      nodeElement.classList.add('node');
+      if (node.isStart) {
+        nodeElement.classList.add('node-start');
+        startNode = node;
+      } else if (node.isFinish) {
+        nodeElement.classList.add('node-finish');
+        finishNode = node;
+      }
+      node.element = nodeElement;
+      nodeElement.addEventListener('mousedown', () => {
+        isMousePressed = true;
+        toggleWall(node);
+      });
+      nodeElement.addEventListener('mouseenter', () => {
+        if (isMousePressed) {
+          toggleWall(node);
+        }
+      });
+      gridElement.appendChild(nodeElement);
+      currentRow.push(node);
+    }
+    grid.push(currentRow);
+  }
+}
+
+function toggleWall(node) {
+  if (!node.isStart && !node.isFinish) {
+    node.isWall = !node.isWall;
+    node.element.classList.toggle('node-wall');
+  }
+}
+
+document.body.addEventListener('mouseup', () => {
+  isMousePressed = false;
+});
+
+function getAllNodes() {
+  const nodes = [];
+  for (const row of grid) {
+    for (const node of row) {
+      nodes.push(node);
+    }
+  }
+  return nodes;
+}
+
+function getUnvisitedNeighbors(node) {
+  const neighbors = [];
+  const { row, col } = node;
+  if (row > 0) neighbors.push(grid[row - 1][col]);
+  if (row < rows - 1) neighbors.push(grid[row + 1][col]);
+  if (col > 0) neighbors.push(grid[row][col - 1]);
+  if (col < cols - 1) neighbors.push(grid[row][col + 1]);
+  return neighbors.filter(neighbor => !neighbor.isVisited);
+}
+
+function dijkstra(startNode, finishNode) {
+  const visitedNodesInOrder = [];
+  startNode.distance = 0;
+  const unvisitedNodes = getAllNodes();
+  while (unvisitedNodes.length) {
+    unvisitedNodes.sort((a, b) => a.distance - b.distance);
+    const closestNode = unvisitedNodes.shift();
+    if (closestNode.isWall) continue;
+    if (closestNode.distance === Infinity) return visitedNodesInOrder;
+    closestNode.isVisited = true;
+    visitedNodesInOrder.push(closestNode);
+    if (closestNode === finishNode) return visitedNodesInOrder;
+    const unvisitedNeighbors = getUnvisitedNeighbors(closestNode);
+    for (const neighbor of unvisitedNeighbors) {
+      neighbor.distance = closestNode.distance + 1;
+      neighbor.previousNode = closestNode;
+    }
+  }
+}
+
+function getNodesInShortestPathOrder(finishNode) {
+  const nodesInShortestPathOrder = [];
+  let currentNode = finishNode;
+  while (currentNode !== null) {
+    nodesInShortestPathOrder.unshift(currentNode);
+    currentNode = currentNode.previousNode;
+  }
+  return nodesInShortestPathOrder;
+}
+
+function animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder) {
+  for (let i = 0; i <= visitedNodesInOrder.length; i++) {
+    if (i === visitedNodesInOrder.length) {
+      setTimeout(() => {
+        animateShortestPath(nodesInShortestPathOrder);
+      }, 10 * i);
+      return;
+    }
+    setTimeout(() => {
+      const node = visitedNodesInOrder[i];
+      if (!node.isStart && !node.isFinish) {
+        node.element.classList.add('node-visited');
+      }
+    }, 10 * i);
+  }
+}
+
+function animateShortestPath(nodesInShortestPathOrder) {
+  for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
+    setTimeout(() => {
+      const node = nodesInShortestPathOrder[i];
+      if (!node.isStart && !node.isFinish) {
+        node.element.classList.add('node-shortest-path');
+      }
+    }, 50 * i);
+  }
+}
+
+document.getElementById('visualizeBtn').addEventListener('click', () => {
+  const visitedNodesInOrder = dijkstra(startNode, finishNode);
+  const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+  animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  createGrid();
+});
+
+createGrid();
+</script>
+</html>

@@ -1,0 +1,239 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #09d3ac;
+}
+
+.grid {
+  margin: 100px 0 0;
+}
+
+
+
+.node {
+  width: 25px;
+  height: 25px;
+  outline: 1px solid rgb(175, 216, 248);
+  display: inline-block;
+}
+
+.node-finish {
+  background-color: red;
+}
+
+.node-start {
+  background-color: green;
+}
+
+.node-visited {
+  animation-name: visitedAnimation;
+  animation-duration: 1.5s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+
+@keyframes visitedAnimation {
+  0% {
+    transform: scale(0.3);
+    background-color: rgba(0, 0, 66, 0.75);
+    border-radius: 100%;
+  }
+
+  50% {
+    background-color: rgb(128, 128, 255);
+  }
+
+  75% {
+    transform: scale(1.2);
+    background-color: rgb(128, 128, 255);
+  }
+
+  100% {
+    transform: scale(1);
+    background-color: rgb(255, 128, 64);
+  }
+}
+
+.node-wall {
+  background-color: rgb(255, 255, 255);
+}
+
+.node-shortest-path {
+  animation-name: shortestPath;
+  animation-duration: 1.5s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+
+@keyframes shortestPath {
+  0% {
+    transform: scale(0.6);
+    background-color: rgb(255, 254, 106);
+  }
+
+  50% {
+    transform: scale(1.2);
+    background-color: rgb(255, 254, 106);
+  }
+
+  100% {
+    transform: scale(1);
+    background-color: rgb(255, 254, 106);
+  }
+}
+
+
+
+
+:root {
+      --primary-color: #ffffff;
+      --accent-color: #fe5005;
+      --board-max-width: 800px;
+      --blur-bg: rgba(255,255,255,0.2);
+      --blur-filter: blur(10px);
+      --radius: 12px;
+      --input-shadow: rgba(0,0,0,0.2);
+    }
+    * { box-sizing: border-box; margin:0; padding:0; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: var(--primary-color);
+      background: #000;
+      overflow-x: hidden;
+    }  
+     #bg-video {
+      position: fixed;
+      top:0; left:0;
+      width:100vw; height:100vh;
+      object-fit: cover;
+      z-index:-1;
+      filter: brightness(50%);
+    }
+    header {
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      font-size: 2rem;
+      font-weight: 700;
+      text-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+    .controls {
+      display:flex;
+      flex-wrap:wrap;
+      gap:1rem;
+      justify-content: space-between;
+      backdrop-filter: var(--blur-filter);
+      background: var(--blur-bg);
+      padding:1rem;
+      border-radius: var(--radius);
+      margin:0rem auto;
+      max-width: var(--board-max-width);
+      align-items: center;
+      border: 1px solid rgba(255,255,255,0.4);
+    }
+    .controls img.logo {
+      height:40px;
+      border-radius:4px;
+    }
+    .controls .button-group {
+      display:flex;
+      gap:0.5rem;
+      flex-wrap:wrap;
+    }
+    .controls button,
+    .controls a.link-btn {
+      display:inline-flex;
+      align-items:center;
+      gap:0.5rem;
+      padding:0.5rem 5.5rem;
+      background: var(--accent-color);
+      color:#fff;
+      border:none;
+      border-radius: var(--radius);
+      cursor:pointer;
+      font-weight:500;
+      text-decoration:none;
+      transition:transform 0.2s;
+    }
+    .controls button:hover,
+    .controls a.link-btn:hover {
+      transform: translateY(-2px);
+    }
+    
+    
+.linkedin-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #0a66c2;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  align-content: center;
+}
+
+.linkedin-button:hover {
+  background-color: #004182;
+}
+
+.info-box {
+  margin-top: 10px;
+  margin-left:30px;
+  width: 300px;
+  max-height: var(--board-max-size);
+  overflow-y: auto;
+  backdrop-filter: var(--blur-filter);
+  background: var(--blur-bg);
+  padding: 1.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: white;
+  font-weight: 500;
+}
+.alert-icon {
+  font-size: 1.2rem;
+  color: #0d6efd; /* Bootstrap primary blue */
+}
+
+
+#Iterations {
+		margin-top:10px;
+      width: 300px;
+      max-height: var(--board-max-size);
+      overflow-y: auto;
+      backdrop-filter: var(--blur-filter);
+      background: var(--blur-bg);
+      padding: 1rem;
+      margin-left:14.5rem ;
+      border-radius: var(--board-radius);
+      border: 1px solid rgba(255,255,255,0.4);
+      background: var(--blur-bg);
+      border-radius: var(--radius);
+    }
