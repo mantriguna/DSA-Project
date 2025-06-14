@@ -66,7 +66,7 @@ Profile
 </div>
 
 </div>
-  <div class="container  hidden" id="game-area">
+  <div class="container" id="game-area">
     <div id="user-score" class="scoreboard">
       <h2>You</h2>
       <div id="user-count">0</div>
@@ -119,39 +119,28 @@ let gameStarted = false;
   }
 
   function renderBoard() {
-	  boardEl.innerHTML = '';
-	  for (let i = 0; i < 9; i++) {
-	    const cell = document.createElement('div');
-	    cell.className = 'cell';
-
-	    // Always show the mark or blank:
-	    cell.textContent = board[i];
-
-	    // If empty…
-	    if (!board[i]) {
-	      // If game hasn’t begun, lock every cell
-	      if (!gameStarted) {
-	        cell.classList.add('locked');
-	        cell.addEventListener('click', () =>
-	          alert("Click on the 'Let's Begin' button to start!")
-	        );
+	    boardEl.innerHTML = '';
+	    for (let i = 0; i < 9; i++) {
+	      const cell = document.createElement('div');
+	      cell.className = 'cell';
+	      cell.textContent = board[i];
+	      if (!board[i]) {
+	        if (!gameStarted) {
+	          cell.classList.add('locked');
+	          cell.addEventListener('click', () =>
+	            alert("Click 'Let's Begin' to start!")
+	          );
+	        } else if (userTurn) {
+	          cell.addEventListener('click', () => onCellClick(i));
+	        } else {
+	          cell.classList.add('locked');
+	        }
+	      } else {
+	        cell.classList.add('disabled');
 	      }
-	      // If game has begun and it's the user's turn, allow click
-	      else if (userTurn) {
-	        cell.addEventListener('click', () => onCellClick(i));
-	      }
-	      // Otherwise (computer’s turn), just grey out
-	      else {
-	        cell.classList.add('locked');
-	      }
-	    } else {
-	      // Occupied cell is always disabled
-	      cell.classList.add('disabled');
+	      boardEl.appendChild(cell);
 	    }
-
-	    boardEl.appendChild(cell);
 	  }
-	}
 
 
   function onCellClick(i) {
@@ -192,6 +181,10 @@ let gameStarted = false;
     };
     const [text, cls] = outcomes[winner || ''];
     statusEl.innerHTML = `<div class="result ${cls}">${text}</div>`;
+    boardEl.querySelectorAll('.cell').forEach(cell => {
+        if (!cell.textContent) cell.classList.add('locked');
+      });
+
 
     if (matchCount < TOTAL_MATCHES) {
       setTimeout(() => {
@@ -285,22 +278,28 @@ let gameStarted = false;
     }
   }
 
+  
   resetBtn.addEventListener('click', () => {
-    matchCount = 0;
-    userScore = 0;
-    compScore = 0;
-    userCountEl.textContent = '0';
-    compCountEl.textContent = '0';
-    statusEl.textContent = '';
-    board.fill('');
-    userTurn = true; // Restart with user
-    gameArea.style.visibility = 'hidden';
-    toggleButtonState(beginBtn, false);
-    toggleButtonState(resetBtn, true);
-    gameArea.classList.add('hidden');
-    matchCount = 0; updateMatchInfo();
-    renderBoard();
-  });
+	  // Reset all counters & flags
+	  matchCount = 0;
+	  userScore  = 0;
+	  compScore  = 0;
+	  gameStarted = false;
+
+	  // Reset UI text
+	  userCountEl.textContent = '0';
+	  compCountEl.textContent = '0';
+	  statusEl.textContent = '';
+	  board.fill('');
+	  // Reset buttons
+	  toggleButtonState(beginBtn, false);  // enable "Let's Begin"
+	  toggleButtonState(resetBtn, true);   // disable "Reset"
+
+	  // Reset match info & board
+	  updateMatchInfo();
+	  renderBoard();
+	});
+
 
   function updateStatus() {
     statusEl.textContent = userTurn ? "Your turn (O)" : "Computer's turn (X)";
