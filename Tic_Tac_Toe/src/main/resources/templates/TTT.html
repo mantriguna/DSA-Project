@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DSA Tic Tac Toe</title>
+  <link rel="icon" type="image/png" href="/Images/My_Logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/CSS/Tic_Tac_Toe.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+</head>
+<body>
+<video id="bg-video" autoplay muted loop>
+    <source src="/Videos/space.webm" type="video/webm" />
+  </video>
+
+  <header>🧩Tic Tac Toe Tournament</header>
+    <div class="controls">
+    <img src="/Images/My_Logo.png" alt="Logo" class="logo" />
+        <button onclick="window.open('https://github.com/mantriguna/DSA-Project/tree/3f9dd24ae0290ffa6a227e42553a256710c8af03/Shortest_Path_Finder', '_blank')"
+          style="display: inline-flex; align-items: center; gap: 0.5rem;
+                 padding: 0.5rem 1rem; margin: 0 0.5rem;
+                 background: #000; color: #fff; border: none; border-radius: 0.5rem;
+                 cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 500;">
+    <i class="fab fa-github" style="font-size: 1.2rem;"></i>
+    Code
+  </button>
+  <button onclick="window.open('https://www.geeksforgeeks.org/user/mantriguna/', '_blank')"
+        style="display: inline-flex; align-items: center; gap: 0.5rem;
+               padding: 0.5rem 1rem; margin: 0 0.5rem;
+               background: #2f8d46; color: #fff; border: none; border-radius: 0.5rem;
+               cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 500;">
+  <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/geeksforgeeks.svg"
+       alt="GFG" style="height: 20px; width: 20px; filter: invert(100%);">
+Profile
+</button>
+    <button id="begin-tourney"  style="padding:  10px 35px 10px 35px; ">Let's Begin</button>
+    <button id="reset-tourney" disabled style="padding:  10px 35px 10px 35px;">Reset Tournament</button>
+</div>
+<div style="display: flex; gap: 2rem; align-items: flex-start; ">
+  <div id="Iterations">
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <img src="/Images/My_Logo.png" alt="Initial Image" style="height: 140px; border-radius: var(--board-radius); padding: 10px">
+      <div >
+      <h2 style="margin: 0; font-weight: bold; color: white;padding-bottom: 15px;">Mantri Guna</h2>
+      <a href="https://www.linkedin.com/in/mantri-guna/" target="_blank" 
+       style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; 
+              background-color: #0a66c2; color: white; padding: 0.4rem 0.8rem; 
+              border-radius: 5px; text-decoration: none; font-weight: bold;">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" 
+           alt="LinkedIn" style="height: 20px; width: 20px; filter: invert(100%);">
+      LinkedIn
+    </a>
+    </div>
+    </div>
+    
+  </div><div>
+    
+<div id="start-info" class="match-info-box" style="text-align: center; font-size: 1rem; margin: 1rem 0;">
+  To start the Tournament Click<br>Let’s Begin 🏁 <i class="fas fa-play-circle"></i>
+</div>
+<div id="match-info" class="match-info-box">
+  Match 0 of 6
+</div>
+</div>
+
+</div>
+  <div class="container  hidden" id="game-area">
+    <div id="user-score" class="scoreboard">
+      <h2>You</h2>
+      <div id="user-count">0</div>
+    </div>
+    <div class="board" id="board"></div>
+    <div id="comp-score" class="scoreboard">
+      <h2>AI</h2>
+      <div id="comp-count">0</div>
+    </div>
+  </div>
+  <div id="status"></div>
+<script th:inline="none">
+let gameStarted = false;
+
+  const TOTAL_MATCHES = 6;
+  let board = Array(9).fill('');
+  let userTurn = true;
+  let matchCount = 0;
+  let userScore = 0, compScore = 0;
+
+  const gameArea = document.getElementById('game-area');
+  const boardEl = document.getElementById('board');
+  const statusEl = document.getElementById('status');
+  const userCountEl = document.getElementById('user-count');
+  const compCountEl = document.getElementById('comp-count');
+  const beginBtn = document.getElementById('begin-tourney');
+  const resetBtn = document.getElementById('reset-tourney');
+
+  beginBtn.addEventListener('click', () => {
+	  gameStarted = true;      
+	  toggleButtonState(beginBtn, true);
+    gameArea.classList.remove('hidden');
+    renderBoard();
+    updateStatus();
+    updateMatchInfo();
+    if (!userTurn) {
+      setTimeout(() => {
+        const move = getRandomEmptyCell();
+        board[move] = 'X';
+        userTurn = true;
+        update();
+      }, 300);
+    }
+  });
+
+  function getRandomEmptyCell() {
+    const emptyCells = board.map((v, i) => !v ? i : null).filter(v => v !== null);
+    return emptyCells[Math.floor(Math.random() * emptyCells.length)];
+  }
+
+  function renderBoard() {
+	  boardEl.innerHTML = '';
+	  for (let i = 0; i < 9; i++) {
+	    const cell = document.createElement('div');
+	    cell.className = 'cell';
+
+	    // Always show the mark or blank:
+	    cell.textContent = board[i];
+
+	    // If empty…
+	    if (!board[i]) {
+	      // If game hasn’t begun, lock every cell
+	      if (!gameStarted) {
+	        cell.classList.add('locked');
+	        cell.addEventListener('click', () =>
+	          alert("Click on the 'Let's Begin' button to start!")
+	        );
+	      }
+	      // If game has begun and it's the user's turn, allow click
+	      else if (userTurn) {
+	        cell.addEventListener('click', () => onCellClick(i));
+	      }
+	      // Otherwise (computer’s turn), just grey out
+	      else {
+	        cell.classList.add('locked');
+	      }
+	    } else {
+	      // Occupied cell is always disabled
+	      cell.classList.add('disabled');
+	    }
+
+	    boardEl.appendChild(cell);
+	  }
+	}
+
+
+  function onCellClick(i) {
+    if (board[i] || !userTurn) return;
+    board[i] = 'O';
+    userTurn = false;
+    update();
+  }
+
+  function update() {
+    renderBoard();
+    const winner = checkWin();
+    if (winner || board.every(v => v)) endMatch(winner);
+    else if (!userTurn) setTimeout(compMove, 300);
+  }
+
+  function compMove() {
+    const best = bestMove();
+    board[best] = 'X';
+    userTurn = true;
+    update();
+  }
+
+  function endMatch(winner) {
+    matchCount++;
+    updateMatchInfo();  // <- Add this
+
+    if (winner === 'O') userScore++;
+    else if (winner === 'X') compScore++;
+    userCountEl.textContent = userScore;
+    compCountEl.textContent = compScore;
+
+    const outcomes = {
+      'O': ['You win this match!', 'win'],
+      'X': ['Computer wins this match!', 'lose'],
+      '': ['Match Draw!', 'draw']
+    
+    };
+    const [text, cls] = outcomes[winner || ''];
+    statusEl.innerHTML = `<div class="result ${cls}">${text}</div>`;
+
+    if (matchCount < TOTAL_MATCHES) {
+      setTimeout(() => {
+        board.fill('');
+        statusEl.textContent = '';
+        userTurn = matchCount % 2 === 0; // Alternate: true for user, false for computer
+        renderBoard();
+        updateStatus();
+        if (!userTurn) {
+          setTimeout(() => {
+            const move = getRandomEmptyCell();
+            board[move] = 'X';
+            userTurn = true;
+            update();
+          }, 300);
+        }
+      }, 1500);
+    } else {
+      showTournamentResult();
+      toggleButtonState(resetBtn, false);
+    }
+
+  }
+
+  function showTournamentResult() {
+    const overall =
+      userScore > compScore ? 'Tournament Won!' :
+      compScore > userScore ? 'Tournament Lost' :
+      'Tournament Draw';
+    const cls =
+      userScore > compScore ? 'win' :
+      compScore > userScore ? 'lose' :
+      'draw';
+    statusEl.innerHTML = `<div class="result ${cls}">${overall}</div>`;
+  }
+
+  function checkWin() {
+    const wins = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8],
+      [0, 3, 6], [1, 4, 7], [2, 5, 8],
+      [0, 4, 8], [2, 4, 6]
+    ];
+    for (const [a, b, c] of wins) {
+      if (board[a] && board[a] === board[b] && board[b] === board[c]) return board[a];
+    }
+    return null;
+  }
+
+  function bestMove() {
+    let bestScore = -Infinity, move;
+    for (let i = 0; i < 9; i++) {
+      if (!board[i]) {
+        board[i] = 'X';
+        let score = minimax(board, 0, false);
+        board[i] = '';
+        if (score > bestScore) {
+          bestScore = score;
+          move = i;
+        }
+      }
+    }
+    return move;
+  }
+
+  function minimax(bd, depth, isMax) {
+    const result = checkWin();
+    if (result === 'X') return 10 - depth;
+    if (result === 'O') return depth - 10;
+    if (bd.every(v => v)) return 0;
+
+    if (isMax) {
+      let best = -Infinity;
+      for (let i = 0; i < 9; i++) {
+        if (!bd[i]) {
+          bd[i] = 'X';
+          best = Math.max(best, minimax(bd, depth + 1, false));
+          bd[i] = '';
+        }
+      }
+      return best;
+    } else {
+      let best = Infinity;
+      for (let i = 0; i < 9; i++) {
+        if (!bd[i]) {
+          bd[i] = 'O';
+          best = Math.min(best, minimax(bd, depth + 1, true));
+          bd[i] = '';
+        }
+      }
+      return best;
+    }
+  }
+
+  resetBtn.addEventListener('click', () => {
+    matchCount = 0;
+    userScore = 0;
+    compScore = 0;
+    userCountEl.textContent = '0';
+    compCountEl.textContent = '0';
+    statusEl.textContent = '';
+    board.fill('');
+    userTurn = true; // Restart with user
+    gameArea.style.visibility = 'hidden';
+    toggleButtonState(beginBtn, false);
+    toggleButtonState(resetBtn, true);
+    gameArea.classList.add('hidden');
+    matchCount = 0; updateMatchInfo();
+    renderBoard();
+  });
+
+  function updateStatus() {
+    statusEl.textContent = userTurn ? "Your turn (O)" : "Computer's turn (X)";
+  }
+  
+  const matchInfoEl = document.getElementById('match-info');
+
+  function updateMatchInfo() {
+    matchInfoEl.textContent = `Match ${matchCount} of ${TOTAL_MATCHES}`;
+  }
+  
+  function toggleButtonState(button, isDisabled) {
+	  button.disabled = isDisabled;
+	  button.style.opacity = isDisabled ? "0.5" : "1";
+	  button.style.cursor = isDisabled ? "not-allowed" : "pointer";
+	}
+
+  toggleButtonState(beginBtn, false);
+  toggleButtonState(resetBtn, true);
+  renderBoard();
+  updateMatchInfo();
+</script>
+
+</body>
+</html>
