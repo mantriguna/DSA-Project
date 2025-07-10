@@ -1,6 +1,3 @@
-
-
-
 :root {
       --primary-color: #ffffff;
       --accent-color: #fe5005;
@@ -174,3 +171,62 @@
     .win { color: green; }
     .lose { color: red; }
     .draw { color: gray; }
+    
+    
+    
+@media (max-width: 600px) {
+	
+	
+	
+  /* keep controls in a row, allow wrapping */
+  .controls {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  /* make each button share the row evenly */
+  .controls button,
+  .controls a.link-btn {
+    flex: 1 1 120px;   /* grow/shrink, minimum 120px */
+    max-width: 180px;  /* never exceed 180px */
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+
+  /* specifically style begin/reset the same way */
+  #begin-tourney,
+  #reset-tourney {
+    flex: 1 1 120px;
+    max-width: 180px;
+    padding: 8px 12px;
+    font-size: clamp(11px, 3vw, 15px); 
+  }
+  /* text sizes */
+  .match-info-box,
+  #status {
+    font-size: 1rem;
+    
+    
+    :root {
+  --board-size: 330px;
+  --cell-gap: 10px;
+  --cell-size: calc((var(--board-size) - (var(--cell-gap) * 2)) / 3);
+}
+
+
+  .board {
+    transform: scale(1.05); /* Slight enlargement visually */
+  }
+
+  .scoreboard h2 {
+    font-size: 1.8rem;  /* Larger user/AI label */
+  }
+
+  .scoreboard div {
+    font-size: 2.4rem;  /* Larger score value */
+  }
+  }
+  
+}
