@@ -116,3 +116,89 @@
       background: var(--blur-bg);
       border-radius: var(--radius);
     }
+
+    
+.centered-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+}
+
+/* 1. Wrap your <table> in a .grid-wrapper in your HTML: */
+.grid-wrapper {
+  /* pick how wide you want it on desktop / mobile... */
+  width: 90vmin;        /* 90% of the smaller viewport dimension */
+  max-width: 500px;     /* never get wider than 500px */
+  aspect-ratio: 1 / 1;  /* enforce a square container */
+  margin: 0 auto;       /* center it horizontally */
+  overflow: hidden;     /* hide any overflow if your cells slightly bleed */
+}
+
+/* 2. Make the table fill that square */
+.grid-wrapper table#sudoku-board {
+  width: 100%;
+  height: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;  /* so columns divide evenly */
+}
+
+/* 3. Force each of the 9×9 cells to fill 1/9th of the width AND height */
+.grid-wrapper table#sudoku-board td {
+  width: calc(100% / 9);
+  height: calc(100% / 9);
+  text-align: center;
+  padding: 0;
+  border: 1px solid #fff;
+  font-size: 1.2rem; /* tweak so text fits nicely */
+}
+
+
+/*====================================
+  Mobile portraits up to 600px wide
+====================================*/
+@media only screen and (max-width: 600px) {
+  /* scale the whole main area */
+  .centered-container {
+    transform: scale(0.85);
+    transform-origin: top center;
+  }
+
+  /* tighten up the controls bar */
+  .controls {
+    padding: 0.5rem;
+    gap: 0.5rem;
+  }
+  .controls button,
+  .controls a.link-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  /* shrink the sidebar */
+  #Iterations {
+    width: 200px;
+    padding: 0.7rem;
+    margin-left: 0;
+  }
+
+  /* maintain the same board‐cell proportions */
+  #sudoku-board td {
+    width: 1.2em;
+    height: 1.2em;
+    font-size: 1.6em;
+  }
+}
+
+/*====================================
+  Even smaller phones up to 400px wide
+====================================*/
+@media only screen and (max-width: 400px) {
+  .centered-container {
+    transform: scale(0.75);
+  }
+  /* optional: make text a hair smaller on tiny screens */
+  header {
+    font-size: 1.6rem;
+  }
+}
