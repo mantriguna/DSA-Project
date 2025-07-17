@@ -20,7 +20,7 @@
 
   <div class="controls">
     <img src="/Images/My_Logo.png" alt="Logo" class="logo" />
-        <button onclick="window.open('https://github.com/mantriguna/DSA-Project/tree/dbb40b2a8f42bfbe47e0962a8e0abf31985479b6/Sudoku-Solver', '_blank')"
+        <button onclick="window.open('https://github.com/mantriguna/DSA-Project/tree/3f9dd24ae0290ffa6a227e42553a256710c8af03/Shortest_Path_Finder', '_blank')"
           style="display: inline-flex; align-items: center; gap: 0.5rem;
                  padding: 0.5rem 1rem; margin: 0 0.5rem;
                  background: #000; color: #fff; border: none; border-radius: 0.5rem;
@@ -40,9 +40,17 @@ Profile
 	<button id="visualizeBtn" style="padding:  10px 35px 10px 35px; ">Visualize</button>
     <button id="resetBtn" style="padding:  10px 35px 10px 35px;">Reset Grid</button>
 </div>
-<div style="display: flex; gap: 2rem; align-items: flex-start; margin-left:60px;">
+<div
+  style="
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    align-items: flex-start;
+    width: 100%;
+  "
+>
   <div id="Iterations">
-    <div style="display: flex; align-items: center; gap: 1rem;">
+    <div style="display: flex; align-items: center;">
       <img src="/Images/My_Logo.png" alt="Initial Image" style="height: 100px; border-radius: var(--board-radius); padding: 10px">
       <h2 style="margin: 0; font-weight: bold; color: white;">Mantri Guna</h2>
     </div>
@@ -58,13 +66,19 @@ Profile
 
   <div class="info-box" style="border-radius: var(--radius);">
   <span class="alert-icon">ℹ️</span>
-  You can place a blocker on the grid by clicking a cell, which prevents the pathfinding algorithm from passing through it.
+  You can place a blocker on the grid by clicking a cell, which prevents the path finding algorithm from passing through it.
 </div>
 
   
 </div>
 
-	<div style="margin-left: 10px;"><div id="grid" style="margin: 20px 0 20px 0;"></div></div>
+	<div style="
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    align-items: flex-start;
+    width: 100%;
+  "><div id="grid" style="margin: 20px 0 20px 0;"></div></div>
 
 </body>
 <!-- node -->

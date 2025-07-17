@@ -24,12 +24,66 @@
 .grid {
   margin: 100px 0 0;
 }
+/* 1. Make #grid into a CSS Grid of 20×50 */
+#grid {
+  display: grid;
+  grid-template-columns: repeat(50, 1fr);
+  grid-template-rows:    repeat(20, 1fr);
+  /* fill up to 90% of the smaller viewport dimension,
+     so it scales down on phones but stays full‑sized on desktop */
+  width: 114vmin;
+  max-width: 800px;       /* never blow up too big on large screens */
+  aspect-ratio: 50 / 20;  /* lock the overall box to exactly 50:20 */
+  margin: 1rem auto;      /* center it under your sidebar/controls */
+}
 
+/* 2. Make each .node fill its grid cell 100% */
+#grid .node {
+  width: 100%;
+  height: 100%;
+}
 
+/* 3. On very narrow viewports, let it expand horizontally a bit */
+@media (max-width: 600px) {
+  #grid {
+    width: 95vw;
+  }
+  .info-box{
+  font-size: 0.9rem;
+  }
+  
+  #Iterations {
+    /* make it full width (or nearly) and center it */
+    width: 90%;
+    margin: 1rem auto;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  /* shrink your logo */
+  #Iterations > div > img {
+    height: 60px;
+    padding: 5px;
+  }
+
+  /* shrink the heading text */
+  #Iterations > div > h2 {
+    font-size: 1.2rem;
+    text-align: center;
+  }
+
+  /* tighten up the link button */
+  #Iterations a {
+    padding: 0.3rem 0.6rem !important;
+    font-size: 0.9rem;
+  }
+  
+}
 
 .node {
-  width: 25px;
-  height: 25px;
   outline: 1px solid rgb(175, 216, 248);
   display: inline-block;
 }
@@ -206,7 +260,6 @@
 
 .info-box {
   margin-top: 10px;
-  margin-left:30px;
   width: 300px;
   max-height: var(--board-max-size);
   overflow-y: auto;
@@ -231,7 +284,6 @@
       backdrop-filter: var(--blur-filter);
       background: var(--blur-bg);
       padding: 1rem;
-      margin-left:14.5rem ;
       border-radius: var(--board-radius);
       border: 1px solid rgba(255,255,255,0.4);
       background: var(--blur-bg);
